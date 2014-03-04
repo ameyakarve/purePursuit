@@ -1,79 +1,79 @@
-<!DOCTYPE html>
 <html>
+<head>
+  <title>Pure Pursuit guidance law assignment</title>
+  <style type="text/css">
+    canvas {
+      border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+  <canvas id = "e" width="1000" height="500"></canvas>
+  <button onclick="reset()">Reset</button>
+  <button onclick="generatePath()">Calculate path</button>
 
-  <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Purepursuit : " />
+  <script type="text/javascript">
+    var points = [];
+    var canvas = document.getElementById("e");
+    var context = canvas.getContext("2d");
+    canvas.addEventListener("click", canvasOnClick, false);
+    function reset() {
+      points = [];
+      canvas.width = canvas.width;
+    }
+    function generatePath() {
+      var v = 2.0;
+      var dt = 1.0;
+      var x = points[0];
+      var y = points[1];
+      var angle = 0.0;
+      for (var i = 2; i < points.length; i+=2) {
+        var x1 = points[i];
+        var y1 = points[i+1];
+        var distance = (x-x1)*(x-x1) + (y-y1)*(y-y1);
+        angle = Math.atan((y - y1)/ (x - x1));
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+        if(x > x1) angle+= Math.PI;
+        console.log(angle*180.0 / Math.PI);
+        while(distance > v*v*dt*dt) {
+          //keep pursuing, updating heading angle
+          x+= v*Math.cos(angle) * dt;
+          y+= v*Math.sin(angle) * dt;
+          console.log(x, y);
+          context.beginPath();
+          context.arc(x,y,1,0,2*Math.PI);
+          context.stroke();
+          distance = (x-x1)*(x-x1) + (y-y1)*(y-y1);
 
-    <title>Purepursuit</title>
-  </head>
+        }
+        // within range. start going towards next point
+      }
+    }
+    function canvasOnClick(e) {
+      var cell = getCursorPosition(e);
+      points.push(cell.column, cell.row);
+      console.log(cell.column, cell.row);
+      context.beginPath();
+      context.arc(cell.column,cell.row,2,0,2*Math.PI);
+      context.stroke();
+    }
 
-  <body>
-
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/ameyakarve/purePursuit">View on GitHub</a>
-
-          <h1 id="project_title">Purepursuit</h1>
-          <h2 id="project_tagline"></h2>
-
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/ameyakarve/purePursuit/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/ameyakarve/purePursuit/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
-
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
-
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
-
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
-
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
-
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
-
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
-
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
-
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
-
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
-
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-      </section>
-    </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Purepursuit maintained by <a href="https://github.com/ameyakarve">ameyakarve</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
-
-    
-
-  </body>
+    function getCursorPosition(e) {
+      var x;
+      var y;
+      if (e.pageX != undefined && e.pageY != undefined) {
+        x = e.pageX;
+        y = e.pageY;
+      }
+      else {
+        x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+        y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+      }
+      x -= canvas.offsetLeft;
+      y -= canvas.offsetTop;
+      var cell = {row: y, column: x};
+      return cell;
+    }
+  </script>
+</body>
 </html>
