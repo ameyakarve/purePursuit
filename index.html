@@ -22,7 +22,7 @@
       canvas.width = canvas.width;
     }
     function generatePath() {
-      var v = 2.0;
+      var v = 8.0;
       var dt = 1.0;
       var x = points[0];
       var y = points[1];
@@ -54,7 +54,7 @@
       points.push(cell.column, cell.row);
       console.log(cell.column, cell.row);
       context.beginPath();
-      context.arc(cell.column,cell.row,2,0,2*Math.PI);
+      context.arc(cell.column,cell.row,8,0,2*Math.PI);
       context.stroke();
     }
 
